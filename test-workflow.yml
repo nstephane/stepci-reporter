@@ -1,0 +1,31 @@
+version: "1.1"
+name: Test with Reporter
+tests:
+  example:
+    steps:
+      - name: GET request
+        http:
+          url: https://example.com
+          method: GET
+          check:
+            status: 200
+      
+      # Save test results
+      - name: Save Results
+        plugin:
+          id: "stepci-reporter"
+          params:
+            action: save
+            workflowName: "example"
+          check:
+            saved: true
+
+      # Get test results (optional)
+      - name: Get Results
+        plugin:
+          id: "stepci-reporter"
+          params:
+            action: get
+            workflowName: "example"
+          check:
+            exists: true
