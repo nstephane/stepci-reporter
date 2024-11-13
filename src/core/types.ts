@@ -8,9 +8,44 @@ export interface StorageConfig {
 
 export interface ReporterConfig {
   storage: StorageConfig;
-  apiPort?: number;  // Added this line - optional port number
-  retention?: number; // Optional - days to keep data
-  enabled?: boolean; // Optional - enable/disable the reporter
+  apiPort?: number;
+  retention?: number;
+  enabled?: boolean;
+}
+
+export interface TestStep {
+  id: string;
+  name: string;
+  type: string;
+  duration: number;
+  status: 'passed' | 'failed';
+  request?: {
+    method?: string;
+    url?: string;
+    headers?: Record<string, string>;
+    body?: any;
+  };
+  response?: {
+    status?: number;
+    statusText?: string;
+    headers?: Record<string, string>;
+    body?: any;
+  };
+  expectations?: Array<{
+    name: string;
+    expected: any;
+    actual: any;
+    passed: boolean;
+  }>;
+  error?: string;
+}
+
+export interface DetailedTest {
+  id: string;
+  name: string;
+  duration: number;
+  status: 'passed' | 'failed';
+  steps: TestStep[];
 }
 
 export interface TestRunRecord {
@@ -19,9 +54,13 @@ export interface TestRunRecord {
   timestamp: Date;
   duration: number;
   status: 'passed' | 'failed';
-  environment?: Record<string, string | undefined>;
-  testResults: TestResult[];
-  metadata?: Record<string, any>;
+  environment?: Record<string, string>;
+  testResults: DetailedTest[];
+  metadata?: {
+    environment?: string;
+    tags?: string[];
+    custom?: Record<string, any>;
+  };
 }
 
 export interface TestRunFilters {
